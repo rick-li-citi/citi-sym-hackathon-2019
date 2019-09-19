@@ -1,0 +1,15 @@
+{
+  "applications": [
+    {
+      "type": "sandbox",
+      "id": "citi-rfq",
+      "name": "citi-rfq",
+      "blurb": "Citi RFQ",
+      "publisher": "",
+      "url": "https://localhost:4000/controller.html",
+      "domain": "localhost",
+      "visible": true,
+      "icon":"https://localhost:4000/images/app.png"
+    }
+  ]
+}
