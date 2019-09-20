@@ -12,7 +12,7 @@ SYMPHONY.remote.hello()
         render(e, data) {
             console.log('CitiRfq: rendering ', data, e);
             return {
-                template: '<entity><iframe src="https://google.com" /></entity>',
+                template: '<messageML><div style="border-radius: 4px; width: 800px; overflow: hidden;background: border: 1px solid #838995;box-sizing: border-box;box-shadow: 0px 1px 10px #007ECC;"><iframe src="https://localhost:4000/rfq.html" width="100%" height="305px" /></div></messageML>',
                 data: {}
               };
         }

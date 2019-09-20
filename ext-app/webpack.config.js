@@ -49,8 +49,9 @@ module.exports = {
       __DEV__: true
     }),
     new CopyWebpackPlugin([{
-      from: './src/html/controller.html'
+      from: './src/html'
     }]),
+    
     new CopyWebpackPlugin([{
       from: './bundle.json'
     }]),
@@ -59,6 +60,7 @@ module.exports = {
     }]),
   ],
   devServer: {
+    publicPath: path.resolve(__dirname, '/'),
     contentBase: path.resolve(__dirname, '/'),
     port: 4000,
     inline: true,
