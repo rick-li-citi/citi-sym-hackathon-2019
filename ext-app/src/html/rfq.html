@@ -7,11 +7,16 @@
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
     <script>
         window.onload = function(){
-            const socketio = io('https://localhost:3000');
+            const socket = io('https://localhost:3000');
+
+            socket.on('serverEvent', data => {
+                console.log('Received ServerEvent', data);
+            });
 
             setInterval(() => {
-                socketio.emit('clientEvent', new Date());
+                socket.emit('clientEvent', new Date());
             }, 1000)
+          
             
         };
     </script>
