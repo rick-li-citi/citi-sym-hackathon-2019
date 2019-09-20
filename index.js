@@ -1,5 +1,6 @@
-const Symphony = require('symphony-api-client-node')
+const Symphony = require('symphony-api-client-node');
 Symphony.setDebugMode(true)
+require('./server.js');
 
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {

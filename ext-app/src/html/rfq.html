@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <script>
+        window.onload = function(){
+            const socketio = io('https://localhost:3000');
+
+            setInterval(() => {
+                socketio.emit('clientEvent', new Date());
+            }, 1000)
+            
+        };
+    </script>
     <title>RFQ</title>
 </head>
 <body>
