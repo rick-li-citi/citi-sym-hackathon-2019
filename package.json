@@ -13,5 +13,11 @@
     "express": "^4.17.1",
     "socket.io": "^2.3.0",
     "symphony-api-client-node": "^1.0.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6"
   }
 }
