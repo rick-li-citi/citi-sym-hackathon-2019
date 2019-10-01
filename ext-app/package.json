@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "webpack": "./node_modules/webpack/bin/webpack.js -p --config ./webpack.config.js",
+    "webpack": "node ./node_modules/webpack/bin/webpack.js -p --config ./webpack.config.js",
     "watch": "webpack-dev-server --progress --colors --hot --inline --https"
   },
   "devDependencies": {
