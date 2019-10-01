@@ -25,6 +25,6 @@ io.on('connection', (socket) => {
     });
 });
 
-setInterval(() => {
+/*setInterval(() => {
     io.emit('serverEvent', {payload: new Date()});
-}, 1000)
+}, 1000)*/
