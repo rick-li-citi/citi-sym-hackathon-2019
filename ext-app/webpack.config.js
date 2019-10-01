@@ -9,7 +9,7 @@ module.exports = {
     controller: path.resolve(__dirname, "./src/js/controller.js")
   },
   output: {
-    path: path.resolve(__dirname),
+    path: path.resolve(__dirname, "./build"),
     filename: "[name].bundle.js"
   },
   devtool: 'source-map',
@@ -49,15 +49,15 @@ module.exports = {
       __DEV__: true
     }),
     new CopyWebpackPlugin([{
-      from: './src/html'
+      from: './src/html',
     }]),
     
     new CopyWebpackPlugin([{
       from: './bundle.json'
     }]),
-    new CopyWebpackPlugin([{
-      from: './src/img', to: 'img'
-    }]),
+    /*new CopyWebpackPlugin([{
+      from: './src/img', to: './dist/img'
+    }]),*/
   ],
   devServer: {
     publicPath: path.resolve(__dirname, '/'),
