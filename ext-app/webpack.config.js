@@ -6,7 +6,8 @@ module.exports = {
   watch: true,
   entry: {
     // babelPolyfill: 'babel-polyfill',
-    controller: path.resolve(__dirname, "./src/js/controller.js")
+    controller: path.resolve(__dirname, "./src/js/controller.js"),
+    rfq: path.resolve(__dirname, "./src/js/rfq.js"),
   },
   output: {
     path: path.resolve(__dirname, "./build"),

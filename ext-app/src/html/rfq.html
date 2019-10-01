@@ -5,22 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-    <script>
-        window.onload = function(){
-            const socket = io('https://localhost:3000');
-
-            socket.on('serverEvent', data => {
-                console.log('Received ServerEvent', data);
-            });
-
-            setInterval(() => {
-                socket.emit('clientEvent', new Date());
-            }, 1000)
-          
-            
-        };
-    </script>
+    
     <title>RFQ</title>
+    
+    <script type="text/javascript" src="rfq.bundle.js" charset="utf-8"></script>
 </head>
 <body>
     <h1>RFQ page</h1>
