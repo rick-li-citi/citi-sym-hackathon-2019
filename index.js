@@ -4,13 +4,27 @@ require('./server.js');
 
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
-    console.log('botHearsSomething:', message);
     let reply_message = 'Hello ' + message.user.firstName + ', hope you are doing well!!'
     reply_message += '<span class="entity" data-entity-id="summary"></span>';
-    let json = '{"summary": { "type": "com.citi.rfq", "version": "0.1", "payload": {"rfqId": "xxxx"} }}'; //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
+    // TODO: turn the message text into data here (e.g. call NLP)
+
+    // set data to render into the "summary" entity span defined above
+    //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
+    const jsonObject = {
+      summary: {
+        type: 'com.citi.rfq',
+        version: '0.1',
+        message,
+        payload: {
+          rfqId: 'xxxx',
+        },
+      },
+    };
+    const jsonString = JSON.stringify(jsonObject);
+
     Symphony.sendMessage(message.stream.streamId, 
       reply_message, 
-      json,
+      jsonString,
       Symphony.MESSAGEML_FORMAT,
     );
   });

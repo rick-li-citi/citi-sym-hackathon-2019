@@ -1,3 +1,8 @@
+const updateUIComponents = (data) => {
+  document.getElementById('message-text').textContent = data.message.messageText;
+  document.getElementById('received-data').textContent = JSON.stringify(data.payload, null, 4);
+}
+
 window.onload = function(){
   const socket = io('https://localhost:3000');
 
@@ -11,5 +16,7 @@ window.onload = function(){
   
   const urlParams = new URLSearchParams(window.location.search);
   const jsonData = urlParams.get('data');
-  console.log(JSON.parse(jsonData));
+  const data = JSON.parse(jsonData);
+  console.log('RFQ page data received:', data);
+  updateUIComponents(data);
 };
