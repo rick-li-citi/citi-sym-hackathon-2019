@@ -17,6 +17,10 @@ const botHearsSomething = (event, messages) => {
         message,
         payload: {
           rfqId: 'xxxx',
+          description: 'bond name',
+          direction: 'buy',
+          size: '123',
+          price: '123',
         },
       },
     };
