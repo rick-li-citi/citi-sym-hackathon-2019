@@ -52,7 +52,9 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: './src/html',
     }]),
-
+    new CopyWebpackPlugin([{
+      from: './src/css',
+    }]),
     new CopyWebpackPlugin([{
       from: './bundle.json',
     }]),
