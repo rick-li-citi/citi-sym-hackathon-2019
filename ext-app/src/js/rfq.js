@@ -25,24 +25,28 @@ const updateUIComponents = (data) => {
   const { message, payload } = data;
   $('#message-text').text(message ? message.messageText : '');
   $('#received-data').text(JSON.stringify(payload, null, 4));
-
-  const tableContainer = $('#rfq-table-container');
-  const table = $(`
-    <table class="rfq-table">
-      <thead><tr></tr></thead>
-      <tbody><tr></tr></tbody>
-    </table>
+  
+  const rfqEditableContainer = $('#rfq-edit-container');
+  const preText = $(`
+    <span class="rfq-display-segment">${message.user.displayName} wants to</span>
+  `);
+  const directionDropdown = $(`
+    <select class="rfq-display-segment" value="${payload.direction}">
+      <option value="buy">buy</option>
+      <option value="sell">sell</option>
+    </select>
+  `);
+  const sizeInput = $(`
+    <input class="rfq-display-segment" type="text" value="${payload.size}" />
+  `);
+  const descriptionText = $(`
+    <span class="rfq-display-segment">${payload.description} at $</span>
+  `);
+  const priceInput = $(`
+    <input class="rfq-display-segment" type="text" value="${payload.price}" />
   `);
 
-  tableColumnDefinitions.forEach((colDef) => {
-    const headerRow = table.find('thead > tr');
-    const bodyRow = table.find('tbody > tr');
-
-    headerRow.append($(`<th>${colDef.header}</th>`));
-    bodyRow.append($(`<td>${payload[colDef.field]}</th>`));
-  });
-
-  tableContainer.append(table);
+  rfqEditableContainer.append(preText).append(directionDropdown).append(sizeInput).append(descriptionText).append(priceInput);
 }
 
 window.onload = function(){
