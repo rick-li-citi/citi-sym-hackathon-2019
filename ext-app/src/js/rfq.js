@@ -54,8 +54,8 @@ const enhanceDataWithRfqState = (data) => {
 }
 
 onActionButtonClicked = (data, nextState) => {
-  // TODO: send message with rfq and updated fields to chatroom
-  console.log(data, nextState);
+  // update state
+  data.payload.state = nextState;
 
   // socket is declared in window.onload()
   // expect the server to send an event with this rfqId as the event name when it receives our message

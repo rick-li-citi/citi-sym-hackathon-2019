@@ -1,8 +1,9 @@
-const express = require('express')
-const fs = require('fs')
-const https = require('https')
-const app = express()
-
+const express = require('express');
+const fs = require('fs');
+const https = require('https');
+const app = express();
+const Symphony = require('symphony-api-client-node');
+Symphony.setDebugMode(true);
 
 app.get('/', function (req, res) {
   res.send('hello world')
@@ -18,12 +19,24 @@ server.listen(3000, function () {
 
 const io = require('socket.io')(server);
 io.on('connection', (socket) => { 
-    console.log('SocketIO connected');
-    socket.emit('event', {payload: 'Hello!!!'});
-    socket.on('sendRfqMessageEvent', (data) => {
-        console.log('Got event from client', data);
-        socket.emit(data.payload.rfqId, data);
-    });
+  console.log('SocketIO connected');
+
+  socket.on('sendRfqMessageEvent', (data) => {
+      console.log('Got event from client', data);
+      const { message, payload } = data;
+      // send reply to extension app
+      socket.emit(payload.rfqId, data);
+
+      const updatedRfqMessage = '<span class="entity" data-entity-id="rfqDataPassthrough"></span>';
+      const jsonObject = { rfqDataPassthrough: data };
+      const jsonString = JSON.stringify(jsonObject);
+
+      Symphony.sendMessage(message.stream.streamId, 
+        updatedRfqMessage,
+        jsonString,
+        Symphony.MESSAGEML_FORMAT,
+      );
+  });
 });
 
 /*setInterval(() => {

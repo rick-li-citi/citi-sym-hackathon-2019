@@ -1,5 +1,5 @@
 const Symphony = require('symphony-api-client-node');
-Symphony.setDebugMode(true)
+Symphony.setDebugMode(true);
 require('./server.js');
 
 // temporary until we plug in nlp
