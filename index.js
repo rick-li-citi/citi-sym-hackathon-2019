@@ -30,11 +30,9 @@ const getRfqFromMessageObject = (message) => {
   return rfq;
 }
 
-// keep track of rfqs every time we restart the bot
-let prevRfqId = 0;
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
-    let reply_message = 'Hello ' + message.user.firstName + ', hope you are doing well!!'
+    let reply_message = '';//'Hello ' + message.user.firstName + ', hope you are doing well!!'
     reply_message += '<span class="entity" data-entity-id="summary"></span>';
     // TODO: turn the message text into data here (e.g. call NLP)
     const rfq = getRfqFromMessageObject(message);
@@ -46,10 +44,7 @@ const botHearsSomething = (event, messages) => {
         type: 'com.citi.rfq',
         version: '0.1',
         message,
-        payload: {
-          rfqId: prevRfqId++,
-          ...rfq,
-        },
+        payload: rfq,
       },
     };
     const jsonString = JSON.stringify(jsonObject);

@@ -7,6 +7,22 @@ th, td {
     border: 1px solid black;
 }
 
+.id-label {
+    font-size: 10px;
+    color: #ccc;
+}
+
 #rfq-edit-container {
     display: flex;
+    background: #eee;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.rfq-display-segment {
+    margin: 0 2px;
+}
+
+input.rfq-display-segment {
+    padding: 0;
 }
