@@ -53,13 +53,17 @@ const enhanceDataWithRfqState = (data) => {
   return data;
 }
 
-onActionButtonClicked = (rfq, nextState) => {
+onActionButtonClicked = (data, nextState) => {
   // TODO: send message with rfq and updated fields to chatroom
-  console.log(rfq, nextState)
+  console.log(data, nextState);
+
+  // socket is declared in window.onload()
+  socket.emit('sendRfqMessageEvent', data);
 }
 
 // get buttons as jquery objects with event handlers already attached
-const getActionButtons = (rfq) => {
+const getActionButtons = (data) => {
+  const rfq = data.payload;
   let buttons = [];
   const currentState = RFQ_STATES[rfq.state];
   const buttonDefinitions = RFQ_BUTTON_MAPPING[currentState];
@@ -69,13 +73,12 @@ const getActionButtons = (rfq) => {
         <button class="rfq-action-button">
           ${buttonDefinition.text}
         </button>
-      `).click(e => onActionButtonClicked(rfq, buttonDefinition.nextState));
+      `).click(e => onActionButtonClicked(data, buttonDefinition.nextState));
       buttons.push(button);
     });
   }
   return buttons;
 }
-
 
 // update ui componens from the parsed url param json
 const updateUIComponents = (data) => {
@@ -121,15 +124,14 @@ const updateUIComponents = (data) => {
   // contains buttons for the user to ack/counter
   const actionsContainer = $('#rfq-actions-container');
   actionsContainer.children().remove();
-  const buttons = getActionButtons(payload);
+  const buttons = getActionButtons(data);
   // add buttons to container
   buttons.forEach(button => actionsContainer.append(button));
 }
 
+const socket = io('https://localhost:3000');
 const prevRfqId = 0;
-window.onload = function(){
-  const socket = io('https://localhost:3000');
-
+window.onload = function() {
   socket.on('serverEvent', data => {
     console.log('Received ServerEvent', data);
   });

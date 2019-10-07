@@ -20,7 +20,7 @@ const io = require('socket.io')(server);
 io.on('connection', (socket) => { 
     console.log('SocketIO connected');
     socket.emit('event', {payload: 'Hello!!!'});
-    socket.on('clientEvent', (data) => {
+    socket.on('sendRfqMessageEvent', (data) => {
         console.log('Got event from client', data);
     });
 });
