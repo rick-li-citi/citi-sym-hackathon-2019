@@ -1,8 +1,19 @@
-.rfq-table {
-    width: 100%;
-    border-collapse: collapse;
-}
 p { margin: 0 }
+
+.disable-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 1;
+}
+
+.hidden {
+    display: none;
+}
+
 th, td {
     border: 1px solid black;
 }

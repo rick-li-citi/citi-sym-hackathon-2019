@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
     socket.emit('event', {payload: 'Hello!!!'});
     socket.on('sendRfqMessageEvent', (data) => {
         console.log('Got event from client', data);
+        socket.emit(data.payload.rfqId, data);
     });
 });
 

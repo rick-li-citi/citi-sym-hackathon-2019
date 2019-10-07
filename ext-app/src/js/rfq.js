@@ -58,7 +58,16 @@ onActionButtonClicked = (data, nextState) => {
   console.log(data, nextState);
 
   // socket is declared in window.onload()
+  // expect the server to send an event with this rfqId as the event name when it receives our message
+  socket.on(data.payload.rfqId, disableUI);
+  // send this rfq to the server for sending to chatroom
   socket.emit('sendRfqMessageEvent', data);
+}
+
+disableUI = () => {
+  console.log('disable UI called');
+  // for now just show the greyed out overlay
+  $('.disable-overlay').show();
 }
 
 // get buttons as jquery objects with event handlers already attached
@@ -135,10 +144,9 @@ window.onload = function() {
   socket.on('serverEvent', data => {
     console.log('Received ServerEvent', data);
   });
-/*
-  setInterval(() => {
-    socket.emit('clientEvent', new Date());
-  }, 1000);*/
+  socket.on('confirmRfqMessageReceived', data => {
+    console.log('action received by server, todo: disable everything here', data);
+  });
   
   const urlParams = new URLSearchParams(window.location.search);
   const jsonData = urlParams.get('data');
