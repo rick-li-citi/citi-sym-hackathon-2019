@@ -37,3 +37,41 @@ th, td {
 input.rfq-display-segment {
     padding: 0;
 }
+
+.rfq-action-button {
+    margin: 4px;
+    padding: 4px 8px;
+    line-height: 1.5;
+
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+
+    border-radius: 4px;
+    border: 1px solid transparent;
+
+    white-space: nowrap;
+    user-select: none;
+}
+
+.rfq-action-button.default {
+    color: #00bdf2;
+    background-color: #2b333b;
+    border-color: rgba(255, 255, 255, 0.15) rgba(0, 0, 0, 0.6) rgba(0, 0, 0, 0.6) rgba(255, 255, 255, 0.15);
+}
+.rfq-action-button.default:hover {
+    color: #59dbff;
+    background-color: #364049;
+    border-color: transparent;
+}
+
+.rfq-action-button.primary {
+    color: #fff;
+    background-color: #00bdf2;
+    border-color: rgba(255, 255, 255, 0.15) rgba(0, 0, 0, 0.6) rgba(0, 0, 0, 0.6) rgba(255, 255, 255, 0.15);
+}
+.rfq-action-button.primary:hover {
+    background-color: #59bdff;
+    border-color: transparent;
+}

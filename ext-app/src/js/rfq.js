@@ -10,32 +10,39 @@ const RFQ_STATES = {
 const RFQ_BUTTON_MAPPING = {
   [RFQ_STATES.Initiated]: [{
     text: 'Acknowledge',
+    buttonType: 'primary',
     nextState: RFQ_STATES.Acknowledged,
   }],
   [RFQ_STATES.Acknowledged]: [
     {
       text: 'Counter',
+      buttonType: 'primary',
       nextState: RFQ_STATES.Countered,
     },
     {
       text: 'Accept',
+      buttonType: 'primary',
       nextState: RFQ_STATES.Accepted,
     },
     {
       text: 'Reject',
+      buttonType: 'primary',
       nextState: RFQ_STATES.Rejected,
     },
   ],
   [RFQ_STATES.Countered]: [{
     text: 'Counter',
+    buttonType: 'primary',
     nextState: RFQ_STATES.Countered,
   }],
   [RFQ_STATES.Accepted]: [{
     text: 'Complete',
+    buttonType: 'primary',
     nextState: RFQ_STATES.Completed,
   }],
   [RFQ_STATES.Rejected]: [{
     text: 'Complete',
+    buttonType: 'primary',
     nextState: RFQ_STATES.Completed,
   }]
 };
@@ -79,7 +86,7 @@ const getActionButtons = (data) => {
   if (buttonDefinitions) {
     buttonDefinitions.forEach((buttonDefinition) => {
       const button = $(`
-        <button class="rfq-action-button">
+        <button class="rfq-action-button ${buttonDefinition.buttonType}">
           ${buttonDefinition.text}
         </button>
       `).click(e => onActionButtonClicked(data, buttonDefinition.nextState));

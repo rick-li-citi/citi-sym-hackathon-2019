@@ -23,7 +23,7 @@ SYMPHONY.remote.hello().then((data) => {
       const template = `
         <messageML>
           <div style="${iframeCss}">
-            <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" width="100%" style="height: fit-content;" />
+            <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" height="160" width="100%" />
           </div>
         </messageML>'
       `;
