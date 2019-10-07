@@ -18,11 +18,12 @@ SYMPHONY.remote.hello().then((data) => {
         width: 100%;
         overflow: hidden;
         background: linear-gradient(to bottom, #00bdf2e6 0%, #00b3f0e6 20%, #0066b3e6 75%, #004785e6 100%);
+        border-radius: 4px;
       `;
       const template = `
         <messageML>
           <div style="${iframeCss}">
-            <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" width="100%" height="200px" />
+            <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" width="100%" style="height: fit-content;" />
           </div>
         </messageML>'
       `;
