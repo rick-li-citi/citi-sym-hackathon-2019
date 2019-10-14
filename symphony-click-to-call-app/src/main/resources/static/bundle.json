@@ -1,0 +1,15 @@
+{
+  "applications": [
+    {
+      "type": "sandbox",
+      "id": "citi-rfq",
+      "name": "Citi RFQ",
+      "description": "Adds a button in the user profile screen to launch calls to third-party telephony systems",
+      "publisher": "Symphony Platform Solutions",
+      "url": "https://localhost:4000/controller.html",
+      "icon": "https://localhost:4000/img/icon.png",
+      "domain": "localhost",
+      "rsaKey": "-----BEGIN PUBLIC KEY-----MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAw6M73N5HcAlJPVsc/h5uRyXjT1EbLXoyKSIvXQyZGUEpFNMD7zUHidLkysjtuEZVq13EschmLcDlgs8O3MFsESRYVwPbBAUj6tVOAuVq96tMQYxbXDYmLI/KzAboIbrF7gWx9+gH/DELqlv5pru6Ocy0L+bBFGUwjH2FdNxwQ1LAh/6g+FQ3R8GLabwM8m35j8x5dQ8iMg0EAfwXfcOaNADIyZcYkOnAu56U5RPOfjX6qcukJF7oXUI4hxB8vA3LUn3+We/stqvG6QLxbQ6P8J4sNices0buqJHY4VNzQOk9KaqUPfOANsWBuQY6CliEJexadhwnnYqmKX+/kB8QDtLcizW9rHtl2rSOjQ/5+J0LiOqnYuhocCQEY3D2swqdCFwk7bSQKHa9PWwYlM5rrLvEkyOGzS6XOQOn+SmIObsYYuX7G74p3fM6CMbiFCpLZU53siknlAOSaqmzgXIecN9vT5SbRcz2SIM6k/3BCF/Wb1NDWyQbgToiJCOiN3mx+7p6g0SmHWowt9+/y4LV4i4EDf9NW8GIz1aMeQrXRqMvwGI0inGbP8v9QF6Uyb1yezNldEAWZ/H7e0a0ARPVy/4hC9C9K+1t3eGbgfoJmuDkXXD3Qq1nYGrlOJFLVc3z2Yv2ZScBtxu1X+EugkEXz/rYZLTpyszy50Xcy9ym+ZsCAwEAAQ==-----END PUBLIC KEY-----"
+    }
+  ]
+}

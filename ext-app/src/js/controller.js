@@ -1,7 +1,15 @@
 const CitiRfqService = SYMPHONY.services.register('CitiRfq:controller');
 
-SYMPHONY.remote.hello().then((data) => {
-  console.log('CitiRfq: hello done');
+const baseUrl = 'https://localhost:5000';
+let appToken = undefined;
+
+let appTokenPromise = fetch(`${baseUrl}/appToken`)
+  .then(res => res.json())
+  .then(res => {
+    appToken = res['token'];
+  });
+Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
+  console.log('CitiRfq: hello done', data);
   return SYMPHONY.application.register(
     "citi-rfq", 
     ["modules", "applications-nav", "ui", "share", "entity"], 
@@ -39,6 +47,6 @@ SYMPHONY.remote.hello().then((data) => {
     "CitiRfq:controller",
   );
 })
-.fail((e) => {
-  console.error(`Fail to register application `, e);
-});
+// .fail((e) => {
+//   console.error(`Fail to register application `, e);
+// });

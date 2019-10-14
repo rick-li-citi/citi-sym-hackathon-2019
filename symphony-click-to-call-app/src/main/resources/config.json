@@ -1,0 +1,15 @@
+{
+  "sessionAuthHost": "develop2-api.symphony.com",
+  "sessionAuthPort": 443,
+  "keyAuthHost": "develop2.symphony.com",
+  "keyAuthPort": 443,
+  "podHost": "develop2.symphony.com",
+  "podPort": 443,
+  "agentHost": "develop2.symphony.com",
+  "agentPort": 443,
+  "appId": "citi-rfq",
+  "appPrivateKeyPath": "/Users/kl68884/projects/hackathon/citi-sym-hackathon-2019/symphony-click-to-call-app/src/main/resources/bot_134/",
+  "appPrivateKeyName": "firm1_innovate_hackathon_bot_134_privatekey.pem",
+  "truststorePath": "internal_truststore",
+  "truststorePassword": "changeit"
+}
