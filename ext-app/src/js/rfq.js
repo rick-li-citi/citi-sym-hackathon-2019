@@ -1,50 +1,69 @@
+const PERSPECTIVES = {
+  Client: 'Client',
+  Citi: 'Citi',
+};
+
 const RFQ_STATES = {
   Initiated: 'Initiated',
-  Acknowledged: 'Acknowledged',
-  Countered: 'Countered',
+  Quoted: 'Quoted',
   Accepted: 'Accepted',
   Rejected: 'Rejected',
   Completed: 'Completed',
 };
 
-const RFQ_BUTTON_MAPPING = {
-  [RFQ_STATES.Initiated]: [{
-    text: 'Acknowledge',
-    buttonType: 'primary',
-    nextState: RFQ_STATES.Acknowledged,
-  }],
-  [RFQ_STATES.Acknowledged]: [
-    {
-      text: 'Counter',
-      buttonType: 'primary',
-      nextState: RFQ_STATES.Countered,
+const RFQ_STATE_MAPPING = {
+  [RFQ_STATES.Initiated]: {
+    getSummaryPreText: data => `New RFQ from ${data.message.user.displayName}: `,
+    buttons: {
+      [PERSPECTIVES.Citi]: [{
+        text: 'Send Quote',
+        buttonType: 'primary',
+        nextState: RFQ_STATES.Quoted,
+      }],
+    }
+  },
+  [RFQ_STATES.Quoted]: {
+    getSummaryPreText: () => 'Quoted: ',
+    buttons: {
+      [PERSPECTIVES.Client]: [
+        {
+          text: 'Accept',
+          buttonType: 'primary',
+          nextState: RFQ_STATES.Accepted,
+        },
+        {
+          text: 'Reject',
+          buttonType: 'primary',
+          nextState: RFQ_STATES.Rejected,
+        },
+        /*todo: add this functionality later if there's time{
+          text: 'Refresh',
+          buttonType: 'primary',
+          nextState: RFQ_STATES.RequoteRequested,
+        },*/
+      ],
     },
-    {
-      text: 'Accept',
-      buttonType: 'primary',
-      nextState: RFQ_STATES.Accepted,
+    [RFQ_STATES.Accepted]: {
+      getSummaryPreText: () => 'Accepted: ',
+      buttons: {
+        [PERSPECTIVES.Citi]: [{
+          text: 'Complete',
+          buttonType: 'primary',
+          nextState: RFQ_STATES.Completed,
+        }],
+      }
     },
-    {
-      text: 'Reject',
-      buttonType: 'primary',
-      nextState: RFQ_STATES.Rejected,
-    },
-  ],
-  [RFQ_STATES.Countered]: [{
-    text: 'Counter',
-    buttonType: 'primary',
-    nextState: RFQ_STATES.Countered,
-  }],
-  [RFQ_STATES.Accepted]: [{
-    text: 'Complete',
-    buttonType: 'primary',
-    nextState: RFQ_STATES.Completed,
-  }],
-  [RFQ_STATES.Rejected]: [{
-    text: 'Complete',
-    buttonType: 'primary',
-    nextState: RFQ_STATES.Completed,
-  }]
+    [RFQ_STATES.Rejected]: {
+      getSummaryPreText: () => 'Rejected: ',
+      buttons: {
+        [PERSPECTIVES.Citi]: [{
+          text: 'Complete',
+          buttonType: 'primary',
+          nextState: RFQ_STATES.Completed,
+        }],
+      }
+    }
+  }
 };
 
 // get the rfq object from the parsed url param json
@@ -81,10 +100,14 @@ disableUI = () => {
 const getActionButtons = (data) => {
   const rfq = data.payload;
   let buttons = [];
-  const currentState = RFQ_STATES[rfq.state];
-  const buttonDefinitions = RFQ_BUTTON_MAPPING[currentState];
-  if (buttonDefinitions) {
-    buttonDefinitions.forEach((buttonDefinition) => {
+  const currentStateMapping = RFQ_STATE_MAPPING[RFQ_STATES[rfq.state]];
+  if (!currentStateMapping) {
+    return null;
+  }
+
+  const buttonDefinitions = currentStateMapping.buttons;
+  if (buttonDefinitions && buttonDefinitions[data.perspective]) {
+    buttonDefinitions[data.perspective].forEach((buttonDefinition) => {
       const button = $(`
         <button class="rfq-action-button ${buttonDefinition.buttonType}">
           ${buttonDefinition.text}
@@ -96,54 +119,73 @@ const getActionButtons = (data) => {
   return buttons;
 }
 
-// update ui componens from the parsed url param json
-const updateUIComponents = (data) => {
-  const { message, payload } = data;
+getHeader = (data) => {
+  const rfq = data.payload;
 
-  $('#message-text').text(message ? message.messageText : '');
-  $('#received-data').text(JSON.stringify(payload, null, 4));
-  $('#rfq-id-label').text(payload.rfqId);
+  const currentStateMapping = RFQ_STATE_MAPPING[RFQ_STATES[rfq.state]];
+  if (!currentStateMapping) {
+    return null;
+  }
+  const summaryPreText = currentStateMapping.getSummaryPreText ? currentStateMapping.getSummaryPreText(data) : '';
+
+  const header = $(`
+    <div class="rfq-header-section">
+      <div class="citi-logo-wrapper">
+        <img src="https://online.citi.com/GFC/branding/img/Citi-Enterprise-White.png"/>
+      </div>
+      <div class="rfq-info-wrapper">
+        <div>${summaryPreText}<span style="color: #00bdf2;">CITI</span> SELL 25mm TII 0 1/4 07/15/29</div>
+        <div class="rfq-id-small">RFQ ID: ${data.payload.rfqId}</div>
+        <div>Citi Salesperson Name</div>
+        <div>Citigroup Global Markets</div>
+      </div>
+    </div>
+  `);
+
+  return header;
+};
+
+getBody = (data) => {
+  const rfq = data.payload;
+
+  let priceMarkup;
+  if (data.perspective === PERSPECTIVES.Citi) {
+    priceMarkup = `<input value="${rfq.price}" />`;
+  } else {
+    priceMarkup = rfq.price;
+  }
+
+  const body = $(`
+    <div class="rfq-body-section">
+      <div class="rfq-body">
+        <span>TII 0 1/4 07/15/29</span>
+        <span>US9128287D64</span>
+        <span class="notional-wrapper">25,000,000</span>
+      </div>
+      <div class="rfq-body right">
+        <div>CLIENT BUY</div>
+        <div class="price-wrapper">${priceMarkup}</div>
+      </div>
+    </div>
+  `);
   
-  // summary of the rfq with fields (may be editable according to rfq state)
-  const rfqEditableContainer = $('#rfq-edit-container');
-  // clear everything first
-  rfqEditableContainer.children().remove();
-  // create components with corresponding event handlers
-  const preText = $(`
-    <span class="rfq-display-segment">${message.user.displayName} wants to ${payload.direction}</span>
-  `);
-  /*const directionDropdown = $(`
-    <select class="rfq-display-segment" value="${payload.direction}">
-      <option value="buy"${payload.direction === 'buy' ? 'selected' : ''}>buy</option>
-      <option value="sell"${payload.direction === 'sell' ? 'selected' : ''}>sell</option>
-    </select>
-  `).change(e => payload.direction = e.target.value);*/
-  const sizeInput = $(`
-    <input class="rfq-display-segment" type="text" value="${payload.size}" />
-  `);
-  const descriptionText = $(`
-    <span class="rfq-display-segment">${payload.description} at $</span>
-  `);
-  const priceInput = $(`
-    <input class="rfq-display-segment" type="text" value="${payload.price}" />
-  `).on('input', e => payload.price = e.target.value);
+  return body;
+};
 
-  // add components to container
-  rfqEditableContainer.append(
-    preText)/*.append(
-    directionDropdown)*/.append(
-    sizeInput).append(
-    descriptionText).append(
-    priceInput
-  );
+getFooter = (data) => {
+  const rfq = data.payload;
 
-  // contains buttons for the user to ack/counter
-  const actionsContainer = $('#rfq-actions-container');
-  actionsContainer.children().remove();
-  const buttons = getActionButtons(data);
-  // add buttons to container
-  buttons.forEach(button => actionsContainer.append(button));
-}
+  const currentStateMapping = RFQ_STATE_MAPPING[RFQ_STATES[rfq.state]];
+  if (!currentStateMapping) {
+    return null;
+  }
+  const footerText = currentStateMapping.getFooterText ? currentStateMapping.getFooterText(data) : '';
+
+  const footer = $(`
+    <div class="">
+    </div>
+  `);
+};
 
 const socket = io('https://localhost:3000');
 const prevRfqId = 0;
@@ -158,8 +200,17 @@ window.onload = function() {
   const urlParams = new URLSearchParams(window.location.search);
   const jsonData = urlParams.get('data');
   let data = JSON.parse(jsonData);
-  console.log('RFQ page data received:', data);
   data = enhanceDataWithRfqState(data);
-  console.log('RFQ page data enhanced:', data);
-  updateUIComponents(data);
+  console.log('RFQ page data received:', data);
+
+  const container = $("#rfq-container");
+  // data.perspective: who is looking at this screen?
+  data.perspective = data.currentUserId === data.message.user.userId ? PERSPECTIVES.Client : PERSPECTIVES.Citi;
+  
+  container.append(getHeader(data));
+  container.append(getBody(data));
+  container.append(getActionButtons(data));
 };
+
+
+
