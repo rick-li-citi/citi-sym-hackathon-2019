@@ -65,7 +65,7 @@ html, body {
 .rfq-header-section {
     display: flex;
     flex-wrap: wrap;
-    background: rgb(26, 50, 71);
+    background: #1a3247;
 }
 
 .pre-header-row {
@@ -158,4 +158,12 @@ input:focus {
 
 .lighten {
     color: #97999b;
+}
+
+/* rfq footer */
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    background: #1a3247;
+    justify-content: space-between;
 }

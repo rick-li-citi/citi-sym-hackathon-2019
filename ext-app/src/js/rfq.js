@@ -15,23 +15,6 @@ const RFQ_STATES = {
 const RFQ_STATE_MAPPING = {
   [RFQ_STATES.Initiated]: {
     getSummaryPreText: data => `New RFQ from ${data.message.user.displayName}: `,
-    getPostHeaderComponent: (data) => {
-      if (data.perspective === PERSPECTIVES.Client) {
-        const component = $(`
-          <div class="post-header-row">
-            <span class="post-header-label">Quote Requested, pending response.</span>
-          </div>`
-        );
-        const cancelButton = $(`
-          <button class="rfq-action-button red">
-            Cancel
-          </button>
-        `).on('click', e => console.log('cancel clicked', e));
-
-        return component.append(cancelButton);
-      }
-      return null;
-    },
     getPriceComponent: (data) => {
       if (data.perspective === PERSPECTIVES.Citi) {
         return $(`<input value="${data.payload.price}" />`).on('input', (e) => {
@@ -40,7 +23,18 @@ const RFQ_STATE_MAPPING = {
       }
       return null;
     },
+    getFooterText: (data) => {
+      if (data.perspective === PERSPECTIVES.Client) {
+        return 'Quote Requested, pending response.';
+      }
+      return null;
+    },
     buttons: {
+      [PERSPECTIVES.Client]: [{
+        text: 'Cancel',
+        buttonType: 'red',
+        nextState: RFQ_STATES.Cancelled,
+      }],
       [PERSPECTIVES.Citi]: [{
         text: 'Send Quote',
         buttonType: 'green',
@@ -57,6 +51,11 @@ const RFQ_STATE_MAPPING = {
       const ss = timestamp.substring(5, 8);
 
       return `Quote ${verb} at ${hhmm}<span class="lighten">${ss}</span>`
+    },
+    getFooterText: (data) => {
+      if (data.perspective === PERSPECTIVES.Citi) {
+        return 'Pending Client Decision';
+      }
     },
     buttons: {
       [PERSPECTIVES.Client]: [
@@ -86,6 +85,11 @@ const RFQ_STATE_MAPPING = {
       const ss = timestamp.substring(5, 8);
 
       return `Quote accepted at ${hhmm}<span class="lighten">${ss}</span>`
+    },
+    getFooterText: (data) => {
+      if (data.perspective === PERSPECTIVES.Client) {
+        return 'Pending Citi Confirmation';
+      }
     },
     buttons: {
       [PERSPECTIVES.Citi]: [{
@@ -180,11 +184,6 @@ getHeader = (data) => {
     header.prepend(preHeaderComponent);
   }
 
-  const postHeaderComponent = currentStateMapping.getPostHeaderComponent ? currentStateMapping.getPostHeaderComponent(data) : null;
-  if (postHeaderComponent) {
-    header.append(postHeaderComponent);
-  }
-
   return header;
 };
 
@@ -227,23 +226,33 @@ getLastActionLabel = (data) => {
   if (!currentStateMapping) {
     return null;
   }
-  const footerMarkup = currentStateMapping.getActionLabelMarkup ? currentStateMapping.getActionLabelMarkup(data) : null;
+  const actionLabelMarkup = currentStateMapping.getActionLabelMarkup ? currentStateMapping.getActionLabelMarkup(data) : null;
 
-  return footerMarkup ? $(`
+  return actionLabelMarkup ? $(`
     <div class="rfq-footer-section">
-      ${footerMarkup}
+      ${actionLabelMarkup}
     </div>
   `) : null;
 };
 
-// get buttons as jquery objects with event handlers already attached
-const getActionButtons = (data) => {
+
+const getFooter = (data) => {
   const rfq = data.payload;
   const currentStateMapping = RFQ_STATE_MAPPING[RFQ_STATES[rfq.state]];
   if (!currentStateMapping) {
     return null;
   }
 
+  const footerContainer = $('<div class="footer-container"></div>');
+
+  const footerText = currentStateMapping.getFooterText ? currentStateMapping.getFooterText(data) : null;
+  if (footerText) {
+    footerContainer.append($(`
+      <span class="footer-text">${footerText}</span>
+    `));
+  }
+
+  // get buttons as jquery objects with event handlers already attached
   const buttonContainer = $('<div class="rfq-button-container"></div>');
   const buttonDefinitions = currentStateMapping.buttons;
   if (buttonDefinitions && buttonDefinitions[data.perspective]) {
@@ -256,7 +265,10 @@ const getActionButtons = (data) => {
       buttonContainer.append(button);
     });
   }
-  return buttonContainer;
+
+  footerContainer.append(buttonContainer);
+
+  return footerContainer;
 }
 
 const socket = io('https://localhost:3000');
@@ -285,5 +297,5 @@ window.onload = function() {
   container.append(getHeader(data));
   container.append(getBody(data));
   container.append(getLastActionLabel(data));
-  container.append(getActionButtons(data));
+  container.append(getFooter(data));
 };
