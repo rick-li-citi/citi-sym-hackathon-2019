@@ -13,23 +13,40 @@ const RFQ_STATES = {
 
 const RFQ_STATE_MAPPING = {
   [RFQ_STATES.Initiated]: {
+    getFooterMarkup: (data) => {
+      if (data.perspective === PERSPECTIVES.Client) {
+        return ''
+      }
+    },
     getSummaryPreText: data => `New RFQ from ${data.message.user.displayName}: `,
     buttons: {
       [PERSPECTIVES.Citi]: [{
         text: 'Send Quote',
         buttonType: 'primary',
-        nextState: RFQ_STATES.Quoted,
+        onClick: (data) => {
+          data.payload.timestamp = new Date();
+          data.payload.state = RFQ_STATES.Quoted;
+        },
       }],
     }
   },
   [RFQ_STATES.Quoted]: {
     getSummaryPreText: () => 'Quoted: ',
+    getFooterMarkup: (data) => {
+      const verb = data.perspective === PERSPECTIVES.Client ? 'received' : 'sent';
+      const timestamp = new Date().toLocaleTimeString();
+      console.log(timestamp);
+      return `Quote ${verb} at <span class="lighten">${timestamp}</span>`
+    },
     buttons: {
       [PERSPECTIVES.Client]: [
         {
           text: 'Accept',
           buttonType: 'primary',
-          nextState: RFQ_STATES.Accepted,
+          onClick: (data) => {
+            data.payload.timestamp = new Date();
+            data.payload.state = RFQ_STATES.Accepted;
+          },
         },
         {
           text: 'Reject',
@@ -79,13 +96,11 @@ const enhanceDataWithRfqState = (data) => {
   return data;
 }
 
-onActionButtonClicked = (data, nextState) => {
-  // update state
-  data.payload.state = nextState;
+onActionButtonClicked = (data, buttonDefinition) => {
+  // call button's event handler
+  buttonDefinition.onClick(data);
 
   // socket is declared in window.onload()
-  // expect the server to send an event with this rfqId as the event name when it receives our message
-  socket.on(data.payload.rfqId, disableUI);
   // send this rfq to the server for sending to chatroom
   socket.emit('sendRfqMessageEvent', data);
 }
@@ -112,7 +127,7 @@ const getActionButtons = (data) => {
         <button class="rfq-action-button ${buttonDefinition.buttonType}">
           ${buttonDefinition.text}
         </button>
-      `).click(e => onActionButtonClicked(data, buttonDefinition.nextState));
+      `).click(e => onActionButtonClicked(data, buttonDefinition));
       buttons.push(button);
     });
   }
@@ -179,12 +194,13 @@ getFooter = (data) => {
   if (!currentStateMapping) {
     return null;
   }
-  const footerText = currentStateMapping.getFooterText ? currentStateMapping.getFooterText(data) : '';
+  const footerMarkup = currentStateMapping.getFooterMarkup ? currentStateMapping.getFooterMarkup(data) : null;
 
-  const footer = $(`
-    <div class="">
+  return footerMarkup ? $(`
+    <div class="rfq-footer-section">
+      ${footerMarkup}
     </div>
-  `);
+  `) : null;
 };
 
 const socket = io('https://localhost:3000');
@@ -205,10 +221,11 @@ window.onload = function() {
 
   const container = $("#rfq-container");
   // data.perspective: who is looking at this screen?
-  data.perspective = data.currentUserId === data.message.user.userId ? PERSPECTIVES.Client : PERSPECTIVES.Citi;
+  data.perspective = data.currentUser === data.message.user.email ? PERSPECTIVES.Client : PERSPECTIVES.Citi;
   
   container.append(getHeader(data));
   container.append(getBody(data));
+  container.append(getFooter(data));
   container.append(getActionButtons(data));
 };
 

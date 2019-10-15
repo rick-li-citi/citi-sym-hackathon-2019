@@ -1,14 +1,16 @@
 const CitiRfqService = SYMPHONY.services.register('CitiRfq:controller');
 
-const baseUrl = 'https://localhost:5000';
+//const baseUrl = 'https://localhost:5000';
+const baseUrl = 'https://192.168.1.119:5000'; // Brandon - my laptop's IP on my home network, where the java app is running
 let appToken = undefined;
 let currentUser = undefined;
 
-let appTokenPromise = fetch(`${baseUrl}/appToken`)
-  .then(res => res.json())
-  .then(res => {
-    appToken = res['token'];
+let appTokenPromise = fetch(`${baseUrl}/appToken`).then(res => 
+  res.json()
+).then(res => {
+  appToken = res['token'];
 });
+
 Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   console.log('CitiRfq: hello done', data);
   return SYMPHONY.application.register(
@@ -35,7 +37,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
     render(e, data) {
       console.log('CitiRfq: rendering ', data, e);
 
-      // hardcoded Jiehong Chung
+      // assign the current user email to compare with the original message (data.message.user.email) when deciding what to render
       data.currentUser = currentUser;
 
       const jsonData = JSON.stringify(data);

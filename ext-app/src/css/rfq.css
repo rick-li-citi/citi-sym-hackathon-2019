@@ -1,37 +1,5 @@
 html, body {
-    font-family: SymphonyLato,"Hiragino Kaku Gothic Pro",Meiryo,"Yu Gothic Medium",sans-serif;
-}
-
-p { margin: 0 }
-
-th, td {
-    border: 1px solid black;
-}
-
-.id-label {
-    font-size: 10px;
-    color: #ccc;
-}
-
-#rfq-edit-container {
-    display: flex;
-    background: #eee;
-    border-radius: 4px;
-    padding: 4px;
-}
-
-.rfq-display-segment {
-    margin: 0 2px;
-}
-
-input.rfq-display-segment {
-    padding: 0;
-}
-
-
-/*******/
-
-#rfq-container {
+    font-family: SymphonyLato, "Hiragino Kaku Gothic Pro", Meiryo, "Yu Gothic Medium", sans-serif;
     border: 2px solid #84bd00;
 }
 
@@ -96,4 +64,16 @@ input {
 }
 input:focus {
     border-color: #00bdf2;
+}
+
+.rfq-footer-section {
+    padding: 8px 0;
+    background: #1a3247;
+    border-bottom: 1px solid #53565a;
+    text-align: center;
+    color: #babec4;
+}
+
+.lighten {
+    color: #97999b;
 }
