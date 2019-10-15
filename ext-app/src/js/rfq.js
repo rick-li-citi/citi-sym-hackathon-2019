@@ -45,12 +45,12 @@ const RFQ_STATE_MAPPING = {
   [RFQ_STATES.Quoted]: {
     getSummaryPreText: () => 'Quoted: ',
     getActionLabelMarkup: (data) => {
-      const verb = data.perspective === PERSPECTIVES.Client ? 'received' : 'sent';
+      const verb = data.perspective === PERSPECTIVES.Client ? 'received from' : 'sent by';
       const timestamp = (new Date(data.payload.lastUpdated) || new Date()).toTimeString();
       const hhmm = timestamp.substring(0, 5);
       const ss = timestamp.substring(5, 8);
 
-      return `Quote ${verb} at ${hhmm}<span class="lighten">${ss}</span>`
+      return `Quote ${verb} ${data.salesperson.name} at ${hhmm}<span class="lighten">${ss}</span>`
     },
     getFooterText: (data) => {
       if (data.perspective === PERSPECTIVES.Citi) {
@@ -84,7 +84,7 @@ const RFQ_STATE_MAPPING = {
       const hhmm = timestamp.substring(0, 5);
       const ss = timestamp.substring(5, 8);
 
-      return `Quote accepted at ${hhmm}<span class="lighten">${ss}</span>`
+      return `Quote accepted by ${data.message.user.displayName} at ${hhmm}<span class="lighten">${ss}</span>`
     },
     getFooterText: (data) => {
       if (data.perspective === PERSPECTIVES.Client) {
@@ -121,7 +121,7 @@ const RFQ_STATE_MAPPING = {
       const hhmm = timestamp.substring(0, 5);
       const ss = timestamp.substring(5, 8);
 
-      return `Trade completed at ${hhmm}<span class="lighten">${ss}</span>`
+      return `Trade confirmed by ${data.salesperson.name} at ${hhmm}<span class="lighten">${ss}</span>`
     },
   },
 };
@@ -289,7 +289,7 @@ window.onload = function() {
 
   const container = $("#rfq-container");
   // data.perspective: who is looking at this screen?
-  data.perspective = data.currentUser === data.message.user.email ? PERSPECTIVES.Client : PERSPECTIVES.Citi;
+  data.perspective = data.currentUser.email === data.message.user.email ? PERSPECTIVES.Client : PERSPECTIVES.Citi;
   if (data.perspective === PERSPECTIVES.Citi) {
     data.salesperson = data.currentUser;
   }

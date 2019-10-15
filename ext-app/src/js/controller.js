@@ -3,7 +3,7 @@ const CitiRfqService = SYMPHONY.services.register('CitiRfq:controller');
 const baseUrl = 'https://localhost:5000';
 //const baseUrl = 'https://192.168.1.119:5000'; // Brandon - my laptop's IP on my home network, where the java app is running
 let appToken = undefined;
-let currentUser = undefined;
+let currentUserEmail = undefined;
 
 let appTokenPromise = fetch(`${baseUrl}/appToken`).then(res => 
   res.json()
@@ -22,7 +22,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   console.log('CitiRfq: subscribed modules.');
   const extendedUserInfoService = SYMPHONY.services.subscribe('extended-user-info');
   extendedUserInfoService.getEmail().then(email => {
-    currentUser = email;
+    currentUserEmail = email;
 
     // once email is set, subscribe to entity service
     let entityService = SYMPHONY.services.subscribe("entity");
@@ -37,8 +37,17 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
     render(e, data) {
       console.log('CitiRfq: rendering ', data, e);
 
+      // cant get getJwt to work, use hardcoded name mappings for demo purposes
+      const emailNameMappings = {
+        'jiehong.chung@citi.com': 'Jiehong Chung',
+        'rick.li@citi.com': 'Rick Li',
+      };
+
       // assign the current user email to compare with the original message (data.message.user.email) when deciding what to render
-      data.currentUser = currentUser;
+      data.currentUser = {
+        email: currentUserEmail,
+        name: emailNameMappings[currentUserEmail] || 'John Smith',
+      };
 
       const jsonData = JSON.stringify(data);
       const iframeCss = `
