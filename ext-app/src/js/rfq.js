@@ -169,7 +169,7 @@ getHeader = (data) => {
         <img src="https://online.citi.com/GFC/branding/img/Citi-Enterprise-White.png"/>
       </div>
       <div class="rfq-info-wrapper">
-        <div>${summaryPreText}<span style="color: #00bdf2;">CITI</span> ${citiDirection} 25mm TII 0 1/4 07/15/29</div>
+        <div>${summaryPreText}<span style="color: #00bdf2;">CITI</span> ${citiDirection} ${rfq.size} ${rfq.description}</div>
         <div class="rfq-id-small">RFQ ID: ${data.payload.rfqId}</div>
       </div>
     </div>
@@ -197,11 +197,17 @@ getBody = (data) => {
   }
   const priceComponent = currentStateMapping.getPriceComponent ? currentStateMapping.getPriceComponent(data) : null;
 
+  // display the size as a comma separated number
+  const suffixMultiplierMapping = { k: 1e3, m: 1e6, mm: 1e6, b: 1e9 };
+  const suffixMatch = rfq.size.toString().match(/[\D]+$/);
+  const sizeValue = Number.parseFloat(rfq.size) * (suffixMultiplierMapping[suffixMatch ? suffixMatch[0] : null] || 1);
+  const sizeLabel = sizeValue.toString().replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$&,');
+
   const body = $(`
     <div class="rfq-body-section">
       <div class="rfq-body">
         <span>${rfq.description}</span>
-        <span class="notional-wrapper">${rfq.size.toString().replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$&,')}</span>
+        <span class="notional-wrapper">${sizeLabel}</span>
       </div>
       <div class="rfq-body right">
         <div>CLIENT ${rfq.direction.toUpperCase()}</div>
