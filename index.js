@@ -36,6 +36,11 @@ const botHearsSomething = (event, messages) => {
     reply_message += '<span class="entity" data-entity-id="summary"></span>';
     // TODO: turn the message text into data here (e.g. call NLP)
     const rfq = getRfqFromMessageObject(message);
+    
+    // if any field is missing, don't reply
+    if (Object.values(rfq).some(value => !value)) {
+      return;
+    }
 
     // set data to render into the "summary" entity span defined above
     //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
