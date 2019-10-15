@@ -48,13 +48,14 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       const template = `
         <messageML>
           <div style="${iframeCss}">
-            <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" height="300px" width="100%" />
+            <iframe id="ext-app-iframe" src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" height="230" width="100%" />
           </div>
         </messageML>
       `;
+
       return {
         template,
-        data: {},
+        data,
       };
     }
   });

@@ -27,6 +27,11 @@ const getRfqFromMessageObject = (message) => {
   // just use whatever's left for the description
   rfq.description = messageText.trim();
 
+  // format the size to a number
+  const suffixMultiplierMapping = { k: 1e3, m: 1e6, mm: 1e6, b: 1e9 };
+  const suffixMatch = rfq.size.match(/[\D]+$/);
+  rfq.size = Number.parseFloat(rfq.size) * (suffixMultiplierMapping[suffixMatch ? suffixMatch[0] : null] || 1);
+
   return rfq;
 }
 

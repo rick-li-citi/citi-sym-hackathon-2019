@@ -160,13 +160,16 @@ getHeader = (data) => {
   }
   const summaryPreText = currentStateMapping.getSummaryPreText ? currentStateMapping.getSummaryPreText(data) : '';
 
+  const inverseDirectionMapping = { BUY: 'SELL', SELL: 'BUY' };
+  const citiDirection = inverseDirectionMapping[rfq.direction.toUpperCase()];
+
   const header = $(`
     <div class="rfq-header-section">
       <div class="citi-logo-wrapper">
         <img src="https://online.citi.com/GFC/branding/img/Citi-Enterprise-White.png"/>
       </div>
       <div class="rfq-info-wrapper">
-        <div>${summaryPreText}<span style="color: #00bdf2;">CITI</span> SELL 25mm TII 0 1/4 07/15/29</div>
+        <div>${summaryPreText}<span style="color: #00bdf2;">CITI</span> ${citiDirection} 25mm TII 0 1/4 07/15/29</div>
         <div class="rfq-id-small">RFQ ID: ${data.payload.rfqId}</div>
       </div>
     </div>
@@ -197,12 +200,11 @@ getBody = (data) => {
   const body = $(`
     <div class="rfq-body-section">
       <div class="rfq-body">
-        <span>TII 0 1/4 07/15/29</span>
-        <span>US9128287D64</span>
-        <span class="notional-wrapper">25,000,000</span>
+        <span>${rfq.description}</span>
+        <span class="notional-wrapper">${rfq.size.toString().replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, '$&,')}</span>
       </div>
       <div class="rfq-body right">
-        <div>CLIENT BUY</div>
+        <div>CLIENT ${rfq.direction.toUpperCase()}</div>
         <div class="price-wrapper"></div>
       </div>
     </div>
