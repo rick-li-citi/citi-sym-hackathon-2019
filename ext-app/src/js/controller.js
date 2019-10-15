@@ -22,9 +22,9 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   console.log('CitiRfq: subscribed modules.');
   const extendedUserInfoService = SYMPHONY.services.subscribe('extended-user-info');
   extendedUserInfoService.getEmail().then(email => {
-    console.log('email: ', email);
     currentUser = email;
 
+    // once email is set, subscribe to entity service
     let entityService = SYMPHONY.services.subscribe("entity");
     entityService.registerRenderer(
       "com.citi.rfq",
@@ -58,8 +58,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       };
     }
   });
-  
-})
+});
 // .fail((e) => {
 //   console.error(`Fail to register application `, e);
 // });
