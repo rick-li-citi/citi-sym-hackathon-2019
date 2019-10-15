@@ -23,7 +23,7 @@ const RFQ_STATE_MAPPING = {
           </div>`
         );
         const cancelButton = $(`
-          <button class="rfq-action-button cancel">
+          <button class="rfq-action-button red">
             Cancel
           </button>
         `).on('click', e => console.log('cancel clicked', e));
@@ -43,7 +43,7 @@ const RFQ_STATE_MAPPING = {
     buttons: {
       [PERSPECTIVES.Citi]: [{
         text: 'Send Quote',
-        buttonType: 'primary',
+        buttonType: 'green',
         nextState: RFQ_STATES.Quoted,
       }],
     }
@@ -62,17 +62,17 @@ const RFQ_STATE_MAPPING = {
       [PERSPECTIVES.Client]: [
         {
           text: 'Accept',
-          buttonType: 'primary',
+          buttonType: 'green',
           nextState: RFQ_STATES.Accepted,
         },
         {
           text: 'Reject',
-          buttonType: 'primary',
+          buttonType: 'amber',
           nextState: RFQ_STATES.Rejected,
         },
         /*todo: add this functionality later if there's time{
           text: 'Refresh',
-          buttonType: 'primary',
+          buttonType: 'cyan',
           nextState: RFQ_STATES.RequoteRequested,
         },*/
       ],
@@ -90,7 +90,7 @@ const RFQ_STATE_MAPPING = {
     buttons: {
       [PERSPECTIVES.Citi]: [{
         text: 'Complete',
-        buttonType: 'primary',
+        buttonType: 'green',
         nextState: RFQ_STATES.Completed,
       }],
     },
@@ -100,9 +100,24 @@ const RFQ_STATE_MAPPING = {
     buttons: {
       [PERSPECTIVES.Citi]: [{
         text: 'Complete',
-        buttonType: 'primary',
+        buttonType: 'green',
         nextState: RFQ_STATES.Completed,
       }],
+    },
+  },
+  [RFQ_STATES.Completed]: {
+    getPreHeaderComponent: () => ($(`
+      <div class="pre-header-row">
+        Trade Confirmation
+      </div>
+    `)),
+    getSummaryPreText: () => 'Completed: ',
+    getActionLabelMarkup: (data) => {
+      const timestamp = (new Date(data.payload.lastUpdated) || new Date()).toTimeString();
+      const hhmm = timestamp.substring(0, 5);
+      const ss = timestamp.substring(5, 8);
+
+      return `Trade completed at ${hhmm}<span class="lighten">${ss}</span>`
     },
   },
 };
@@ -156,6 +171,11 @@ getHeader = (data) => {
       </div>
     </div>
   `);
+
+  const preHeaderComponent = currentStateMapping.getPreHeaderComponent ? currentStateMapping.getPreHeaderComponent(data) : null;
+  if (preHeaderComponent) {
+    header.prepend(preHeaderComponent);
+  }
 
   const postHeaderComponent = currentStateMapping.getPostHeaderComponent ? currentStateMapping.getPostHeaderComponent(data) : null;
   if (postHeaderComponent) {
