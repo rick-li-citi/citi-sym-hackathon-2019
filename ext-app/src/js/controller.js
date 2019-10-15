@@ -1,7 +1,7 @@
 const CitiRfqService = SYMPHONY.services.register('CitiRfq:controller');
 
-//const baseUrl = 'https://localhost:5000';
-const baseUrl = 'https://192.168.1.119:5000'; // Brandon - my laptop's IP on my home network, where the java app is running
+const baseUrl = 'https://localhost:5000';
+//const baseUrl = 'https://192.168.1.119:5000'; // Brandon - my laptop's IP on my home network, where the java app is running
 let appToken = undefined;
 let currentUser = undefined;
 
@@ -50,7 +50,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
           <div style="${iframeCss}">
             <iframe src="https://localhost:4000/rfq.html?data=${encodeURI(jsonData)}" height="300px" width="100%" />
           </div>
-        </messageML>'
+        </messageML>
       `;
       return {
         template,
