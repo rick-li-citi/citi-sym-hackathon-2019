@@ -18,7 +18,7 @@ const SUPPORTED_BONDS = [{
   coupon: 4.500,
   maturity: '02/06/2057',
 }, {
-  isin: 'US594918CB81',
+  isin: 'US38259PAB85',
   ticker: 'GOOG',
   coupon: 3.625,
   maturity: '5/19/2021',
