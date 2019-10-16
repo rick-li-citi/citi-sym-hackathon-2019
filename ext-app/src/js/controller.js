@@ -73,11 +73,20 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
         const messageML = `
           <messageML> 
             <form id="form_id"> 
+              <h4>Direction</h4>
+              <text-field name="direction" placeholder="Direction" required="true">${data.payload.direction}</text-field>
+
+              <h4>Price</h4>
+              <text-field name="price" placeholder="Price" required="true">${data.payload.price}</text-field>
+
+              <h4>Size</h4>
+              <text-field name="size" placeholder="Size" required="true">${data.payload.size}</text-field>
+
+              <h4>ISIN</h4>
+              <text-field name="isin" placeholder="Isin" required="true">${data.payload.isin}</text-field>
+
               <h4>Description</h4>
               <text-field name="description" placeholder="Description" required="true">${data.payload.description}</text-field>
-
-              <h4>Maturity</h4>
-              <text-field name="maturity" placeholder="YYYY/MM/DD" required="true">2019/10/16</text-field>
                 
               <button name="submit_button" type="action">Submit</button>
             </form>
