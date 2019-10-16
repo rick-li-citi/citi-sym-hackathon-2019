@@ -108,19 +108,20 @@ const botHearsSomething = (event, messages) => {
     reply_message = `
       <form id="form_id"> 
         <h4>Review/edit fields and submit RFQ:</h4>
-        <p>Direction</p>
-        <text-field name="direction" placeholder="Direction" required="true">${rfq.direction}</text-field>
+        <h5>Direction</h5>
+        <radio name="example_radio" value="buy"${rfq.direction.toUpperCase() === 'BUY' ? ' checked="true"' : ''}>Buy</radio>
+        <radio name="example_radio" value="sell"${rfq.direction.toUpperCase() === 'SELL' ? ' checked="true"' : ''}>Sell</radio>
 
-        <p>Price</p>
+        <h5>Price</h5>
         <text-field name="price" placeholder="Price" required="true">${rfq.price}</text-field>
 
-        <p>Size</p>
+        <h5>Size</h5>
         <text-field name="size" placeholder="Size" required="true">${rfq.size}</text-field>
 
-        <p>ISIN</p>
+        <h5>ISIN</h5>
         <text-field name="isin" placeholder="Isin" required="true">${rfq.isin}</text-field>
 
-        <p>Description</p>
+        <h5>Description</h5>
         <text-field name="description" placeholder="Description" required="true">${rfq.description}</text-field>
           
         <button name="submit_button" type="action">Submit</button>

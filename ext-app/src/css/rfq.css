@@ -1,6 +1,7 @@
 html, body {
     font-family: SymphonyLato, "Hiragino Kaku Gothic Pro", Meiryo, "Yu Gothic Medium", sans-serif;
     color: #babec4;
+    overflow: hidden;
 }
 
 /* buttons */
