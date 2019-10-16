@@ -29,11 +29,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   uiService.registerExtension('single-user-im', 'CitiRfq-im', 'CitiRfq:controller', rfqButton);
   uiService.registerExtension('rooms', 'CitiRfq-im', 'CitiRfq:controller', rfqButton);
   
-
-
-  let jwt = undefined;
   let currentUser = undefined;
-  
   extendedUserInfoService.getJwt().then(jwt => {
     console.log('jwt: ', jwt);
     let token = jwt;
@@ -47,14 +43,10 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
     let dataJWT = JSON.parse(window.atob(base64));
 
     console.log('User is ', dataJWT.user);
-  });
-  
-
-  console.log('CitiRfq: subscribed modules.');
-  
-  extendedUserInfoService.getEmail().then(email => {
-    currentUserEmail = email;
-  
+    currentUser = {
+      email: dataJWT.user.email,
+      name: dataJWT.user.displayName,
+    };
 
     // once email is set, subscribe to entity service
     let entityService = SYMPHONY.services.subscribe("entity");
@@ -71,12 +63,6 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
     },
     render(e, data) {
       console.log('CitiRfq: rendering ', data, e);
-
-      // cant get getJwt to work, use hardcoded name mappings for demo purposes
-      const emailNameMappings = {
-        'jiehong.chung@citi.com': 'Jiehong Chung',
-        'rick.li@citi.com': 'Rick Li',
-      };
 
       // todo: brendan
       // if any property is missing from our nlp/regex parsing, show form
@@ -109,10 +95,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       }
 
       // assign the current user email to compare with the original message (data.message.user.email) when deciding what to render
-      data.currentUser = {
-        email: currentUserEmail,
-        name: emailNameMappings[currentUserEmail] || 'John Smith',
-      };
+      data.currentUser = currentUser;
 
       const jsonData = JSON.stringify(data);
       const iframeCss = `
