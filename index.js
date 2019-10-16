@@ -101,17 +101,12 @@ const botHearsSomething = (event, messages) => {
     if (message.payload && message.payload.symphonyElementsAction) {
       rfq = message.payload.symphonyElementsAction.formValues;
     } else {
-<<<<<<< HEAD
-      // TODO: turn the message text into data here (e.g. call NLP)
-      rfq = getRfqFromMessageObject(message);
-=======
       rfq = getRfqFromMessageObject(message);
     }
 
     // no data found, dont reply
     if (!rfq) {
       return;
->>>>>>> 9a11110aadba33365e74672cfdfb9a57024c5e31
     }
 
     // set data to render into the "summary" entity span defined above
