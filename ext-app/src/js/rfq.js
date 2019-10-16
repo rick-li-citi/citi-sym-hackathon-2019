@@ -139,10 +139,13 @@ const enhanceDataWithRfqState = (data) => {
   return data;
 }
 
-onActionButtonClicked = (data, buttonDefinition) => {
+onActionButtonClicked = (data, buttonDefinition, buttonElement) => {
   // update state and timestamp
   data.payload.state = buttonDefinition.nextState;
   data.payload.lastUpdated = new Date();
+
+  // disable this button
+  $('button').attr('disabled', true);
 
   // socket is declared in window.onload()
   // send this rfq to the server for sending to chatroom
@@ -262,7 +265,7 @@ const getFooter = (data) => {
         <button class="rfq-action-button ${buttonDefinition.buttonType}">
           ${buttonDefinition.text}
         </button>
-      `).click(e => onActionButtonClicked(data, buttonDefinition));
+      `).click(e => onActionButtonClicked(data, buttonDefinition, e.target));
       buttonContainer.append(button);
     });
   }

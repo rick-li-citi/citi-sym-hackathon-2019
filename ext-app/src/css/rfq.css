@@ -28,8 +28,11 @@ html, body {
     outline: none;
     cursor: pointer;
 }
-.rfq-action-button:hover {
-    color: #fff !important;
+.rfq-action-button:disabled {
+    color: #97999b !important;
+    background-color: #97999b !important;
+    border-color: #97999b !important;
+    cursor: not-allowed !important;
 }
 
 .rfq-action-button.green {
@@ -37,6 +40,7 @@ html, body {
     border-color: #84bd00;
 }
 .rfq-action-button.green:hover {
+    color: #fff;
     background: #84bd00;
 }
 
@@ -45,6 +49,7 @@ html, body {
     border-color: #ed8b00;
 }
 .rfq-action-button.amber:hover {
+    color: #fff;
     background: #ed8b00;
 }
 
@@ -53,6 +58,7 @@ html, body {
     border-color: #00bdf2;
 }
 .rfq-action-button.cyan:hover {
+    color: #fff;
     background: #00bdf2;
 }
 
@@ -61,6 +67,7 @@ html, body {
     border-color: #b60000;
 }
 .rfq-action-button.red:hover {
+    color: #fff;
     background: #b60000;
 }
 

@@ -109,8 +109,8 @@ const botHearsSomething = (event, messages) => {
       <form id="form_id"> 
         <h4>Review/edit fields and submit RFQ:</h4>
         <h5>Direction</h5>
-        <radio name="example_radio" value="buy"${rfq.direction.toUpperCase() === 'BUY' ? ' checked="true"' : ''}>Buy</radio>
-        <radio name="example_radio" value="sell"${rfq.direction.toUpperCase() === 'SELL' ? ' checked="true"' : ''}>Sell</radio>
+        <radio name="direction" value="buy"${rfq.direction.toUpperCase() === 'BUY' ? ' checked="true"' : ''}>Buy</radio>
+        <radio name="direction" value="sell"${rfq.direction.toUpperCase() === 'SELL' ? ' checked="true"' : ''}>Sell</radio>
 
         <h5>Price</h5>
         <text-field name="price" placeholder="Price" required="true">${rfq.price}</text-field>
