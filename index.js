@@ -91,32 +91,46 @@ const getRfqFromMessageObject = (message) => {
   return rfq;
 }
 
+let jsonObject;
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
-    let reply_message = '';//'Hello ' + message.user.firstName + ', hope you are doing well!!'
-    reply_message += '<span class="entity" data-entity-id="summary"></span>';
+    let reply_message = '<span class="entity" data-entity-id="summary"></span>';
 
     let rfq;
     // first, check for reply from symphony element form with updated values
     if (message.payload && message.payload.symphonyElementsAction) {
       rfq = message.payload.symphonyElementsAction.formValues;
     } else {
-<<<<<<< HEAD
-      // TODO: turn the message text into data here (e.g. call NLP)
-      rfq = getRfqFromMessageObject(message);
-=======
       rfq = getRfqFromMessageObject(message);
     }
 
-    // no data found, dont reply
-    if (!rfq) {
-      return;
->>>>>>> 9a11110aadba33365e74672cfdfb9a57024c5e31
-    }
+    // show form
+    reply_message = `
+      <form id="form_id"> 
+        <h4>Review/edit fields and submit RFQ:</h4>
+        <h5>Direction</h5>
+        <radio name="example_radio" value="buy"${rfq.direction.toUpperCase() === 'BUY' ? ' checked="true"' : ''}>Buy</radio>
+        <radio name="example_radio" value="sell"${rfq.direction.toUpperCase() === 'SELL' ? ' checked="true"' : ''}>Sell</radio>
+
+        <h5>Price</h5>
+        <text-field name="price" placeholder="Price" required="true">${rfq.price}</text-field>
+
+        <h5>Size</h5>
+        <text-field name="size" placeholder="Size" required="true">${rfq.size}</text-field>
+
+        <h5>ISIN</h5>
+        <text-field name="isin" placeholder="Isin" required="true">${rfq.isin}</text-field>
+
+        <h5>Description</h5>
+        <text-field name="description" placeholder="Description" required="true">${rfq.description}</text-field>
+          
+        <button name="submit_button" type="action">Submit</button>
+      </form>
+    `;
 
     // set data to render into the "summary" entity span defined above
     //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
-    const jsonObject = {
+    jsonObject = {
       summary: {
         type: 'com.citi.rfq',
         version: '0.1',
@@ -134,6 +148,25 @@ const botHearsSomething = (event, messages) => {
   });
 };
 
+const formSubmitted = (events, actions) => {
+  actions.forEach((action) => {
+    console.log(action);
+    let reply_message = '<span class="entity" data-entity-id="summary"></span>';
+    // user has clicked submit on the form, can now proceed to normal flow
+    jsonObject.summary.payload = action.formValues;
+    const jsonString = JSON.stringify(jsonObject);
+
+    Symphony.sendMessage(action.streamId,
+      reply_message,
+      jsonString,
+      Symphony.MESSAGEML_FORMAT,
+    );
+  });
+};
+
 Symphony.initBot(__dirname + '/config.json').then((symAuth) => {
-  Symphony.getDatafeedEventsService(botHearsSomething);
+  Symphony.getDatafeedEventsService({
+    onMessageSent: botHearsSomething.bind(null, 'MESSAGE_RECEIVED'),
+    onSymphonyElementsAction: formSubmitted.bind(null, 'ELEMENTS_ACTION_RECEIVED'),
+  });
 });

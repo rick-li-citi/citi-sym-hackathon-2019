@@ -1,8 +1,16 @@
+@font-face {
+    font-family: SymphonyLato;
+    src: url(Lato-Regular.woff2);
+}
+
 html, body {
     font-family: SymphonyLato, "Hiragino Kaku Gothic Pro", Meiryo, "Yu Gothic Medium", sans-serif;
     color: #babec4;
+    overflow: hidden;
 }
 
+
+  
 /* buttons */
 .rfq-button-container {
     background: rgb(26, 50, 71);
@@ -57,8 +65,10 @@ html, body {
 }
 
 #rfq-container {
+    background: #113f65;
     max-width: 600px;
     border: 2px solid #84bd00;
+    padding: 5px;
 }
 
 /* rfq header */
@@ -107,6 +117,7 @@ html, body {
     display: flex;
     background: #113f65;
     color: #babec4;
+    padding: 10px 5px;
 }
 
 .rfq-body {
