@@ -107,24 +107,25 @@ const botHearsSomething = (event, messages) => {
     // show form
     reply_message = `
       <form id="form_id"> 
-        <h4>Direction</h4>
+        <h4>Review/edit fields and submit RFQ:</h4>
+        <p>Direction</p>
         <text-field name="direction" placeholder="Direction" required="true">${rfq.direction}</text-field>
 
-        <h4>Price</h4>
+        <p>Price</p>
         <text-field name="price" placeholder="Price" required="true">${rfq.price}</text-field>
 
-        <h4>Size</h4>
+        <p>Size</p>
         <text-field name="size" placeholder="Size" required="true">${rfq.size}</text-field>
 
-        <h4>ISIN</h4>
+        <p>ISIN</p>
         <text-field name="isin" placeholder="Isin" required="true">${rfq.isin}</text-field>
 
-        <h4>Description</h4>
+        <p>Description</p>
         <text-field name="description" placeholder="Description" required="true">${rfq.description}</text-field>
           
         <button name="submit_button" type="action">Submit</button>
       </form>
-      `;
+    `;
 
     // set data to render into the "summary" entity span defined above
     //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
