@@ -293,7 +293,7 @@ window.onload = function() {
   if (data.perspective === PERSPECTIVES.Citi) {
     data.salesperson = data.currentUser;
   }
-  
+
   container.append(getHeader(data));
   container.append(getBody(data));
   container.append(getLastActionLabel(data));

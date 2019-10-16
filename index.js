@@ -72,14 +72,17 @@ const getRfqFromMessageObject = (message) => {
     isin: nlpResponse.isin,
     description: `${nlpResponse.ticker} ${nlpResponse.coupon} ${nlpResponse.maturity}`,
   };
-  // just use whatever's left for the description
-  rfq.description = messageText.trim();
 
   return rfq;
 }
 
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
+    // let us clear the chatroom
+    if (message.messageText === '-') {
+      return;
+    }
+
     let reply_message = '';//'Hello ' + message.user.firstName + ', hope you are doing well!!'
     reply_message += '<span class="entity" data-entity-id="summary"></span>';
 
@@ -89,12 +92,16 @@ const botHearsSomething = (event, messages) => {
       rfq = message.payload.symphonyElementsAction.formValues;
     } else {
       // TODO: turn the message text into data here (e.g. call NLP)
+<<<<<<< HEAD
       const rfq = getRfqFromMessageObject(message);
     }
 
     // let us clear the chatroom
     if (rfq.description === '-') {
       return;
+=======
+      rfq = getRfqFromMessageObject(message);
+>>>>>>> 4f594b7856abe898cf3705dfa94650901576bff3
     }
 
     // set data to render into the "summary" entity span defined above
