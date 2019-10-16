@@ -40,10 +40,12 @@ const nlp = (input) => {
     };
 }
 
-const createNLPRule = () => new RegExp(".*" //start cound by any white space
-    + `(${ATTRIBUTE_RULES.DIRECTION})\\s+` // direction
-    + `((${ATTRIBUTE_RULES.QUANTITY})\\s+)?` // optional quantity
-    + `(${INSTRUMENT_RULES.BOND_RULE}|${INSTRUMENT_RULES.ISIN_RULE})` // either a bond or an ISIN
-    + `(\\s+${ATTRIBUTE_RULES.PRICE})?.*`, 'g'); // Price
+const createNLPRule = () => new RegExp([
+    '.*', //start of the message could be anything
+    `(${ATTRIBUTE_RULES.DIRECTION})\\s+`, // direction
+    `((${ATTRIBUTE_RULES.QUANTITY})\\s+)?`, // optional quantity
+    `(${INSTRUMENT_RULES.BOND_RULE}|${INSTRUMENT_RULES.ISIN_RULE})`, // either a bond or an ISIN
+    `(\\s+${ATTRIBUTE_RULES.PRICE})?.*` //price
+].join(), 'g');
 
 module.exports = nlp;
