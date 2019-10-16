@@ -14,11 +14,31 @@ let appTokenPromise = fetch(`${baseUrl}/appToken`).then(res =>
 Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   console.log('CitiRfq: hello done', data);
   return SYMPHONY.application.register(
-    "citi-rfq", 
-    ["modules", "applications-nav", "ui", "share", "entity", "extended-user-info"], 
+    {appId: "citi-rfq", tokenA: appToken}, 
+    ["modules", "applications-nav", "ui", "share", "entity","extended-user-info"], 
     ["CitiRfq:controller"],
   );
-}).then((response) => {
+ }).then((response) => {
+  const extendedUserInfoService = SYMPHONY.services.subscribe('extended-user-info');
+  const uiService = SYMPHONY.services.subscribe('ui');
+  const rfqButton = {
+    // icon: `${baseUrl}/img/icon_small.png`,
+    label: 'Rates RFQ',
+    data: {}
+  };
+  uiService.registerExtension('single-user-im', 'CitiRfq-im', 'CitiRfq:controller', rfqButton);
+  uiService.registerExtension('rooms', 'CitiRfq-im', 'CitiRfq:controller', rfqButton);
+  
+
+
+  let jwt = undefined;
+  let currentUser = undefined;
+  
+  extendedUserInfoService.getJwt().then(jwt => {
+    console.log('jwt: ', jwt);
+  });
+  
+
   console.log('CitiRfq: subscribed modules.');
   const extendedUserInfoService = SYMPHONY.services.subscribe('extended-user-info');
   extendedUserInfoService.getEmail().then(email => {
@@ -34,6 +54,9 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   });
 
   CitiRfqService.implement({
+    trigger(uiClass, id, payload, data){
+      console.log(payload)
+    },
     render(e, data) {
       console.log('CitiRfq: rendering ', data, e);
 
@@ -89,7 +112,8 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       };
     }
   });
+
+})
+.fail((e) => {
+  console.error(`Fail to register application `, e);
 });
-// .fail((e) => {
-//   console.error(`Fail to register application `, e);
-// });
