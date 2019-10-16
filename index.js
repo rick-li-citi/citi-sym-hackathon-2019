@@ -20,15 +20,14 @@ const SUPPORTED_BONDS = [{
 }];
 
 const findByDetails = (ticker, coupon, maturity) => {
-  return SUPPORTED_BONDS.filter((bond) => {
+  return SUPPORTED_BONDS.find((bond) => {
     return bond.ticker === ticker && bond.coupon == coupon && bond.maturity === maturity;
   });
 }
 
 const findByISIN = (isin) => {
-  return SUPPORTED_BONDS.filter(bond => bond.isin === isin);
+  return SUPPORTED_BONDS.find(bond => bond.isin === isin);
 }
-
 
 // temporary until we plug in nlp
 const getRfqFromMessageObject = (message) => {
@@ -49,7 +48,7 @@ const getRfqFromMessageObject = (message) => {
 
   'can i buy 4mm TSLA 5.300 081525 at 16.51 pls'
   'can i buy 4mm US88160RAE18 at 16.51 pls'
-  const nlpResponse = {
+  let nlpResponse = {
     quantity: 4000000,
     clientDirection: 'buy',
     isin: null,//'US88160RAE18',
@@ -59,16 +58,27 @@ const getRfqFromMessageObject = (message) => {
     price: 16.51, // optional field, sales editable
   };
 
+  let details;
   if (!nlpResponse.isin) {
     // lookup isin based on ticker coupon maturity
-    // todo: joe
+    details = findByDetails(nlpResponse.ticker, nlpResponse.coupon, nlpResponse.maturity);
+  } else {
+    details = findByISIN(nlpResponse.isin);
   }
 
+  if (!details) return null;
+
+  nlpResponse = {
+    ...nlpResponse,
+    ...details,
+  };
+
+  console.log(nlpResponse);
 
   const rfq = {
     direction: nlpResponse.clientDirection,
-    price: price,
-    size: quantity,
+    price: nlpResponse.price,
+    size: nlpResponse.quantity,
     isin: nlpResponse.isin,
     description: `${nlpResponse.ticker} ${nlpResponse.coupon} ${nlpResponse.maturity}`,
   };
@@ -78,11 +88,6 @@ const getRfqFromMessageObject = (message) => {
 
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
-    // let us clear the chatroom
-    if (message.messageText === '-') {
-      return;
-    }
-
     let reply_message = '';//'Hello ' + message.user.firstName + ', hope you are doing well!!'
     reply_message += '<span class="entity" data-entity-id="summary"></span>';
 
@@ -91,17 +96,12 @@ const botHearsSomething = (event, messages) => {
     if (message.payload && message.payload.symphonyElementsAction) {
       rfq = message.payload.symphonyElementsAction.formValues;
     } else {
-      // TODO: turn the message text into data here (e.g. call NLP)
-<<<<<<< HEAD
-      const rfq = getRfqFromMessageObject(message);
+      rfq = getRfqFromMessageObject(message);
     }
 
-    // let us clear the chatroom
-    if (rfq.description === '-') {
+    // no data found, dont reply
+    if (!rfq) {
       return;
-=======
-      rfq = getRfqFromMessageObject(message);
->>>>>>> 4f594b7856abe898cf3705dfa94650901576bff3
     }
 
     // set data to render into the "summary" entity span defined above
