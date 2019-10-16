@@ -91,10 +91,10 @@ const getRfqFromMessageObject = (message) => {
   return rfq;
 }
 
+let jsonObject;
 const botHearsSomething = (event, messages) => {
   messages.forEach((message, index) => {
-    let reply_message = '';//'Hello ' + message.user.firstName + ', hope you are doing well!!'
-    reply_message += '<span class="entity" data-entity-id="summary"></span>';
+    let reply_message = '<span class="entity" data-entity-id="summary"></span>';
 
     let rfq;
     // first, check for reply from symphony element form with updated values
@@ -104,14 +104,31 @@ const botHearsSomething = (event, messages) => {
       rfq = getRfqFromMessageObject(message);
     }
 
-    // no data found, dont reply
-    if (!rfq) {
-      return;
-    }
+    // show form
+    reply_message = `
+      <form id="form_id"> 
+        <h4>Direction</h4>
+        <text-field name="direction" placeholder="Direction" required="true">${rfq.direction}</text-field>
+
+        <h4>Price</h4>
+        <text-field name="price" placeholder="Price" required="true">${rfq.price}</text-field>
+
+        <h4>Size</h4>
+        <text-field name="size" placeholder="Size" required="true">${rfq.size}</text-field>
+
+        <h4>ISIN</h4>
+        <text-field name="isin" placeholder="Isin" required="true">${rfq.isin}</text-field>
+
+        <h4>Description</h4>
+        <text-field name="description" placeholder="Description" required="true">${rfq.description}</text-field>
+          
+        <button name="submit_button" type="action">Submit</button>
+      </form>
+      `;
 
     // set data to render into the "summary" entity span defined above
     //symphony ext app will render "com.citi.rfq" to iframe loading rfq ui by the rfqId;
-    const jsonObject = {
+    jsonObject = {
       summary: {
         type: 'com.citi.rfq',
         version: '0.1',
@@ -129,6 +146,25 @@ const botHearsSomething = (event, messages) => {
   });
 };
 
+const formSubmitted = (events, actions) => {
+  actions.forEach((action) => {
+    console.log(action);
+    let reply_message = '<span class="entity" data-entity-id="summary"></span>';
+    // user has clicked submit on the form, can now proceed to normal flow
+    jsonObject.summary.payload = action.formValues;
+    const jsonString = JSON.stringify(jsonObject);
+
+    Symphony.sendMessage(action.streamId,
+      reply_message,
+      jsonString,
+      Symphony.MESSAGEML_FORMAT,
+    );
+  });
+};
+
 Symphony.initBot(__dirname + '/config.json').then((symAuth) => {
-  Symphony.getDatafeedEventsService(botHearsSomething);
+  Symphony.getDatafeedEventsService({
+    onMessageSent: botHearsSomething.bind(null, 'MESSAGE_RECEIVED'),
+    onSymphonyElementsAction: formSubmitted.bind(null, 'ELEMENTS_ACTION_RECEIVED'),
+  });
 });

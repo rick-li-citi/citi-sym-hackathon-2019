@@ -64,36 +64,8 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
     render(e, data) {
       console.log('CitiRfq: rendering ', data, e);
 
-      // todo: brendan
-      // if any property is missing from our nlp/regex parsing, show form
-      if (Object.values(data.payload).some(value => !value)) {
-        console.log(data);
-        const messageML = `
-          <messageML> 
-            <form id="form_id"> 
-              <h4>Direction</h4>
-              <text-field name="direction" placeholder="Direction" required="true">${data.payload.direction}</text-field>
-
-              <h4>Price</h4>
-              <text-field name="price" placeholder="Price" required="true">${data.payload.price}</text-field>
-
-              <h4>Size</h4>
-              <text-field name="size" placeholder="Size" required="true">${data.payload.size}</text-field>
-
-              <h4>ISIN</h4>
-              <text-field name="isin" placeholder="Isin" required="true">${data.payload.isin}</text-field>
-
-              <h4>Description</h4>
-              <text-field name="description" placeholder="Description" required="true">${data.payload.description}</text-field>
-                
-              <button name="submit_button" type="action">Submit</button>
-            </form>
-          </messageML>
-        `;
-
-        return { template: messageML };
-      }
-
+      console.log(data);
+      
       // assign the current user email to compare with the original message (data.message.user.email) when deciding what to render
       data.currentUser = currentUser;
 

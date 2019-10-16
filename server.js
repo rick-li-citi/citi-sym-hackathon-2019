@@ -7,7 +7,7 @@ Symphony.setDebugMode(true);
 
 app.get('/', function (req, res) {
   res.send('hello world')
-})
+});
 
 const server = https.createServer({
   key: fs.readFileSync('server.key'),
