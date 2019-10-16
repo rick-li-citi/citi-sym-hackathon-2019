@@ -26,8 +26,7 @@ const getQuantityValue = (quantityString) => {
 }
 
 const nlp = (input) => {
-    console.log(NLP_RULE.source);
-    const parts = NLP_RULE.exec(input);
+    const parts = createNLPRule().exec(input);
     if (!parts || !parts.length) return;
 
     return {
@@ -41,7 +40,7 @@ const nlp = (input) => {
     };
 }
 
-const NLP_RULE = new RegExp(".*" //start cound by any white space
+const createNLPRule = () => new RegExp(".*" //start cound by any white space
     + `(${ATTRIBUTE_RULES.DIRECTION})\\s+` // direction
     + `((${ATTRIBUTE_RULES.QUANTITY})\\s+)?` // optional quantity
     + `(${INSTRUMENT_RULES.BOND_RULE}|${INSTRUMENT_RULES.ISIN_RULE})` // either a bond or an ISIN
