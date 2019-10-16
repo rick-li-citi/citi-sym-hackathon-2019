@@ -206,6 +206,7 @@ getBody = (data) => {
     <div class="rfq-body-section">
       <div class="rfq-body">
         <span>${rfq.description.toUpperCase()}</span>
+        <span>${rfq.isin}</span>
         <span class="notional-wrapper">${sizeLabel}</span>
       </div>
       <div class="rfq-body right">
