@@ -36,6 +36,17 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
   
   extendedUserInfoService.getJwt().then(jwt => {
     console.log('jwt: ', jwt);
+    let token = jwt;
+    let base64HeaderUrl = token.split('.')[0];
+    let base64Header = base64HeaderUrl.replace('-', '+').replace('_', '/');
+    let headerData = JSON.parse(window.atob(base64Header));
+
+    // Get Token payload and date's
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace('-', '+').replace('_', '/');
+    let dataJWT = JSON.parse(window.atob(base64));
+
+    console.log('User is ', dataJWT.user);
   });
   
 
