@@ -44,7 +44,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
 
     console.log('User is ', dataJWT.user);
     currentUser = {
-      email: dataJWT.user.email,
+      email: dataJWT.user.emailAddress,
       name: dataJWT.user.displayName,
     };
 
