@@ -1,6 +1,7 @@
 const Symphony = require('symphony-api-client-node');
 Symphony.setDebugMode(true);
 require('./server.js');
+const nlp = require('./nlp.js');
 
 const SUPPORTED_BONDS = [{
   isin: 'US88160RAE18',
@@ -43,17 +44,19 @@ const getRfqFromMessageObject = (message) => {
     PRICE: /(at|@)( +)?\d+/ig,
     SIZE: /(\d+)?\.?\d+(k|m|b){0,2}/ig,
   };
-
+/*
   const directionMatch = messageText.match(REGEX.DIRECTION);
   if (directionMatch) { messageText = messageText.replace(directionMatch[0], ''); }
   const priceMatch = messageText.match(REGEX.PRICE);
   if (priceMatch) { messageText = messageText.replace(priceMatch[0], ''); }
   const sizeMatch = messageText.match(REGEX.SIZE);
   if (sizeMatch) { messageText = messageText.replace(sizeMatch[0], ''); }
-
-  'can i buy 4mm TSLA 5.300 081525 at 16.51 pls'
+*/
+  'can i buy 4mm TSLA 5.300 08/15/25 at 16.51 pls'
   'can i buy 4mm US88160RAE18 at 16.51 pls'
-  let nlpResponse = {
+
+  let nlpResponse = nlp(messageText);
+  /*{
     quantity: 4000000,
     clientDirection: 'buy',
     isin: null,//'US88160RAE18',
@@ -61,7 +64,7 @@ const getRfqFromMessageObject = (message) => {
     coupon: 5.300,
     maturity: '08/15/2025',
     price: 16.51, // optional field, sales editable
-  };
+  };*/
 
   let details;
   if (!nlpResponse.isin) {
