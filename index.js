@@ -17,6 +17,11 @@ const SUPPORTED_BONDS = [{
   ticker: 'MSFT',
   coupon: 4.500,
   maturity: '02/06/2057',
+}, {
+  isin: 'US38259PAB85',
+  ticker: 'GOOG',
+  coupon: 3.625,
+  maturity: '5/19/2021',
 }];
 
 const findByDetails = (ticker, coupon, maturity) => {
@@ -96,12 +101,17 @@ const botHearsSomething = (event, messages) => {
     if (message.payload && message.payload.symphonyElementsAction) {
       rfq = message.payload.symphonyElementsAction.formValues;
     } else {
+<<<<<<< HEAD
+      // TODO: turn the message text into data here (e.g. call NLP)
+      rfq = getRfqFromMessageObject(message);
+=======
       rfq = getRfqFromMessageObject(message);
     }
 
     // no data found, dont reply
     if (!rfq) {
       return;
+>>>>>>> 9a11110aadba33365e74672cfdfb9a57024c5e31
     }
 
     // set data to render into the "summary" entity span defined above
