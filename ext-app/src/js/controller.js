@@ -62,7 +62,7 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       console.log(payload)
     },
     render(e, data) {
-      if ( new Date().getTime() - data.message.timestamp > 60 * 60 * 60 ){
+      if ( new Date().getTime() - data.message.timestamp > 0.5 * 60 * 60 * 1000 ){
         return {
           template: '<messageML><span>RFQ expired.</span></messageML>'
         };
