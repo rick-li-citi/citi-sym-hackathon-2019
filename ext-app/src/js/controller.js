@@ -43,6 +43,27 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
         'rick.li@citi.com': 'Rick Li',
       };
 
+      // todo: brendan
+      // if any property is missing from our nlp/regex parsing, show form
+      if (Object.values(data.payload).some(value => !value)) {
+        console.log(data);
+        const messageML = `
+          <messageML> 
+            <form id="form_id"> 
+              <h4>Description</h4>
+              <text-field name="description" placeholder="Description" required="true">${data.payload.description}</text-field>
+
+              <h4>Maturity</h4>
+              <text-field name="maturity" placeholder="YYYY/MM/DD" required="true">2019/10/16</text-field>
+                
+              <button name="submit_button" type="action">Submit</button>
+            </form>
+          </messageML>
+        `;
+
+        return { template: messageML };
+      }
+
       // assign the current user email to compare with the original message (data.message.user.email) when deciding what to render
       data.currentUser = {
         email: currentUserEmail,
