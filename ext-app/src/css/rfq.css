@@ -1,28 +1,169 @@
-.rfq-table {
-    width: 100%;
-    border-collapse: collapse;
+html, body {
+    font-family: SymphonyLato, "Hiragino Kaku Gothic Pro", Meiryo, "Yu Gothic Medium", sans-serif;
+    color: #babec4;
 }
 
-th, td {
-    border: 1px solid black;
+/* buttons */
+.rfq-button-container {
+    background: rgb(26, 50, 71);
 }
 
-.id-label {
-    font-size: 10px;
-    color: #ccc;
-}
-
-#rfq-edit-container {
-    display: flex;
-    background: #eee;
+.rfq-action-button {
+    margin: 2px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
-    padding: 4px;
+    border: 2px solid;
+    background: transparent;
+    font-size: 14px;
+    font-weight: bold;
+    color: inherit;
+    outline: none;
+    cursor: pointer;
+}
+.rfq-action-button:hover {
+    color: #fff !important;
 }
 
-.rfq-display-segment {
-    margin: 0 2px;
+.rfq-action-button.green {
+    color: #84bd00;
+    border-color: #84bd00;
+}
+.rfq-action-button.green:hover {
+    background: #84bd00;
 }
 
-input.rfq-display-segment {
-    padding: 0;
+.rfq-action-button.amber {
+    color: #ed8b00;
+    border-color: #ed8b00;
+}
+.rfq-action-button.amber:hover {
+    background: #ed8b00;
+}
+
+.rfq-action-button.cyan {
+    color: #00bdf2;
+    border-color: #00bdf2;
+}
+.rfq-action-button.cyan:hover {
+    background: #00bdf2;
+}
+
+.rfq-action-button.red {
+    color: #b60000;
+    border-color: #b60000;
+}
+.rfq-action-button.red:hover {
+    background: #b60000;
+}
+
+#rfq-container {
+    max-width: 600px;
+    border: 2px solid #84bd00;
+}
+
+/* rfq header */
+.rfq-header-section {
+    display: flex;
+    flex-wrap: wrap;
+    background: #1a3247;
+}
+
+.pre-header-row {
+    width: 100%;
+    background: #97999b;
+    text-align: center;
+    font-weight: bold;
+    color: #eee;
+}
+
+.citi-logo-wrapper {
+    padding: 5px 10px;
+    width: 60px;
+}
+.citi-logo-wrapper > img {
+    width: 100%;
+}
+
+.rfq-info-wrapper {
+    flex: 1;
+    color: #babec4;
+}
+
+.rfq-id-small {
+    color: #97999b;
+    font-size: 12px;
+}
+
+.post-header-row {
+    width: 100%;
+    display: flex;
+}
+.post-header-label {
+    flex: 1;
+}
+
+/* rfq body */
+.rfq-body-section {
+    display: flex;
+    background: #113f65;
+    color: #babec4;
+}
+
+.rfq-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rfq-body.right {
+    align-items: flex-end;
+    padding: 0 4px;
+}
+
+.notional-wrapper {
+    font-weight: bold;
+}
+
+.price-wrapper {
+    width: 150px;
+    font-size: 28px;
+    line-height: 1;
+    text-align: right;
+}
+
+input {
+    width: calc(100% - 8px);
+    padding: 0 4px;
+    background: #161a1d;
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.6) rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.15) rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    font-size: inherit;
+    color: #d3d9de;
+    text-align: inherit;
+    outline: none;
+}
+input:focus {
+    border-color: #00bdf2;
+}
+
+.rfq-footer-section {
+    padding: 8px 0;
+    background: #1a3247;
+    border-bottom: 1px solid #53565a;
+    text-align: center;
+    color: #babec4;
+}
+
+.lighten {
+    color: #97999b;
+}
+
+/* rfq footer */
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    background: #1a3247;
+    justify-content: space-between;
 }
