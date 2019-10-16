@@ -62,6 +62,11 @@ Promise.all([appTokenPromise, SYMPHONY.remote.hello()]).then((data) => {
       console.log(payload)
     },
     render(e, data) {
+      if ( new Date().getTime() - data.message.timestamp > 60 * 60 * 60 ){
+        return {
+          template: '<messageML><span>RFQ expired.</span></messageML>'
+        };
+      }
       console.log('CitiRfq: rendering ', data, e);
 
       console.log(data);
