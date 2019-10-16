@@ -2,23 +2,33 @@ const Symphony = require('symphony-api-client-node');
 Symphony.setDebugMode(true);
 require('./server.js');
 
-const ISIN_MAPPINGS = {
-  US88160RAE18: {
-    ticker: 'TSLA',
-    coupon: 5.300,
-    maturity: '08/15/2025',
-  },
-  US459200HU86: {
-    ticker: 'IBM',
-    coupon: 3.625,
-    maturity: '02/12/2024',
-  },
-  US594918CB81: {
-    ticker: 'MSFT',
-    coupon: 4.500,
-    maturity: '02/06/2057',
-  },
-};
+const SUPPORTED_BONDS = [{
+  isin: 'US88160RAE18',
+  ticker: 'TSLA',
+  coupon: 5.300,
+  maturity: '08/15/2025',
+}, {
+  isin: 'US459200HU86',
+  ticker: 'IBM',
+  coupon: 3.625,
+  maturity: '02/12/2024',
+}, {
+  isin: 'US594918CB81',
+  ticker: 'MSFT',
+  coupon: 4.500,
+  maturity: '02/06/2057',
+}];
+
+const findByDetails = (ticker, coupon, maturity) => {
+  return SUPPORTED_BONDS.filter((bond) => {
+    return bond.ticker === ticker && bond.coupon == coupon && bond.maturity === maturity;
+  });
+}
+
+const findByISIN = (isin) => {
+  return SUPPORTED_BONDS.filter(bond => bond.isin === isin);
+}
+
 
 // temporary until we plug in nlp
 const getRfqFromMessageObject = (message) => {
@@ -81,7 +91,7 @@ const botHearsSomething = (event, messages) => {
       // TODO: turn the message text into data here (e.g. call NLP)
       const rfq = getRfqFromMessageObject(message);
     }
-    
+
     // let us clear the chatroom
     if (rfq.description === '-') {
       return;
@@ -99,8 +109,8 @@ const botHearsSomething = (event, messages) => {
     };
     const jsonString = JSON.stringify(jsonObject);
 
-    Symphony.sendMessage(message.stream.streamId, 
-      reply_message, 
+    Symphony.sendMessage(message.stream.streamId,
+      reply_message,
       jsonString,
       Symphony.MESSAGEML_FORMAT,
     );
